@@ -1,0 +1,359 @@
+{
+  "pv": {
+    "name": "MQuickJS Architecture",
+    "version": "1.0.0"
+  },
+  "nodes": [
+    {
+      "id": "CoreEngine",
+      "type": "text",
+      "x": 338,
+      "y": 358,
+      "width": 120,
+      "height": 62,
+      "text": "**Core Engine**",
+      "pv": {
+        "nodeType": "CoreEngine",
+        "shape": "rectangle"
+      }
+    },
+    {
+      "id": "API",
+      "type": "text",
+      "x": 349,
+      "y": 208,
+      "width": 100,
+      "height": 60,
+      "text": "**API**",
+      "pv": {
+        "nodeType": "API",
+        "shape": "custom"
+      }
+    },
+    {
+      "id": "REPL",
+      "type": "text",
+      "x": 560,
+      "y": 70,
+      "width": 80,
+      "height": 60,
+      "text": "**REPL**",
+      "pv": {
+        "nodeType": "REPL",
+        "shape": "custom"
+      }
+    },
+    {
+      "id": "Parser",
+      "type": "text",
+      "x": 57,
+      "y": 677,
+      "width": 100,
+      "height": 74,
+      "text": "**Parser**",
+      "pv": {
+        "nodeType": "Parser",
+        "shape": "diamond"
+      }
+    },
+    {
+      "id": "BytecodeGenerator",
+      "type": "text",
+      "x": 309,
+      "y": 793,
+      "width": 140,
+      "height": 81,
+      "text": "**Bytecode**\n**Generator**",
+      "pv": {
+        "nodeType": "BytecodeGenerator",
+        "shape": "diamond"
+      }
+    },
+    {
+      "id": "VM",
+      "type": "text",
+      "x": 317,
+      "y": 943,
+      "width": 120,
+      "height": 79,
+      "text": "**Virtual**\n**Machine**",
+      "pv": {
+        "nodeType": "VM",
+        "shape": "diamond"
+      }
+    },
+    {
+      "id": "GC",
+      "type": "text",
+      "x": 428,
+      "y": 1122,
+      "width": 100,
+      "height": 81,
+      "text": "**Garbage**\n**Collector**",
+      "pv": {
+        "nodeType": "GC",
+        "shape": "diamond"
+      }
+    },
+    {
+      "id": "MemoryAllocator",
+      "type": "text",
+      "x": 520,
+      "y": 943,
+      "width": 140,
+      "height": 76,
+      "text": "**Memory**\n**Allocator**",
+      "pv": {
+        "nodeType": "MemoryAllocator",
+        "shape": "diamond"
+      }
+    },
+    {
+      "id": "StdLib",
+      "type": "text",
+      "x": 850,
+      "y": 670,
+      "width": 100,
+      "height": 60,
+      "text": "**Std**\n**Lib**",
+      "pv": {
+        "nodeType": "StdLib",
+        "shape": "custom"
+      }
+    },
+    {
+      "id": "MathLib",
+      "type": "text",
+      "x": 650,
+      "y": 670,
+      "width": 100,
+      "height": 60,
+      "text": "**Math**\n**Lib**",
+      "pv": {
+        "nodeType": "MathLib",
+        "shape": "custom"
+      }
+    },
+    {
+      "id": "StringLib",
+      "type": "text",
+      "x": 450,
+      "y": 670,
+      "width": 100,
+      "height": 60,
+      "text": "**String**\n**Lib**",
+      "pv": {
+        "nodeType": "StringLib",
+        "shape": "custom"
+      }
+    },
+    {
+      "id": "Utils",
+      "type": "text",
+      "x": 260,
+      "y": 670,
+      "width": 80,
+      "height": 60,
+      "text": "**Utils**",
+      "pv": {
+        "nodeType": "Utils",
+        "shape": "custom"
+      }
+    },
+    {
+      "id": "Readline",
+      "type": "text",
+      "x": 548,
+      "y": 208,
+      "width": 100,
+      "height": 60,
+      "text": "**Readline**",
+      "pv": {
+        "nodeType": "Readline",
+        "shape": "custom"
+      }
+    },
+    {
+      "id": "Example",
+      "type": "text",
+      "x": 350,
+      "y": 70,
+      "width": 100,
+      "height": 60,
+      "text": "**Example**",
+      "pv": {
+        "nodeType": "Example",
+        "shape": "custom"
+      }
+    },
+    {
+      "id": "BuildTool",
+      "type": "text",
+      "x": 554,
+      "y": 357,
+      "width": 114,
+      "height": 117,
+      "text": "**Build**\n**Tool**",
+      "pv": {
+        "nodeType": "BuildTool",
+        "shape": "hexagon"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "repl-to-readline",
+      "fromNode": "REPL",
+      "toNode": "Readline",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "input",
+      "pv": {
+        "edgeType": "usage"
+      }
+    },
+    {
+      "id": "parser-to-bytecode",
+      "fromNode": "Parser",
+      "toNode": "BytecodeGenerator",
+      "fromSide": "right",
+      "toSide": "left",
+      "label": "generates",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "bytecode-to-vm",
+      "fromNode": "BytecodeGenerator",
+      "toNode": "VM",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "executes",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "core-to-stdlib",
+      "fromNode": "CoreEngine",
+      "toNode": "StdLib",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "label": "uses",
+      "pv": {
+        "edgeType": "usage"
+      }
+    },
+    {
+      "id": "edge-REPL-API-1766516436453",
+      "fromNode": "REPL",
+      "toNode": "API",
+      "fromSide": "left",
+      "toSide": "right",
+      "pv": {
+        "edgeType": "usage"
+      }
+    },
+    {
+      "id": "edge-API-CoreEngine-1766516436454",
+      "fromNode": "API",
+      "toNode": "CoreEngine",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "dependency"
+      }
+    },
+    {
+      "id": "edge-Example-API-1766516436454",
+      "fromNode": "Example",
+      "toNode": "API",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "usage"
+      }
+    },
+    {
+      "id": "edge-BuildTool-StdLib-1766516436454",
+      "fromNode": "BuildTool",
+      "toNode": "StdLib",
+      "fromSide": "right",
+      "toSide": "right",
+      "pv": {
+        "edgeType": "transformation"
+      }
+    },
+    {
+      "id": "edge-CoreEngine-Utils-1766516436454",
+      "fromNode": "CoreEngine",
+      "toNode": "Utils",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "usage"
+      }
+    },
+    {
+      "id": "edge-CoreEngine-StringLib-1766516436454",
+      "fromNode": "CoreEngine",
+      "toNode": "StringLib",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "usage"
+      }
+    },
+    {
+      "id": "edge-CoreEngine-MathLib-1766516436454",
+      "fromNode": "CoreEngine",
+      "toNode": "MathLib",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "usage"
+      }
+    },
+    {
+      "id": "edge-CoreEngine-Parser-1766516436454",
+      "fromNode": "CoreEngine",
+      "toNode": "Parser",
+      "fromSide": "left",
+      "toSide": "top",
+      "pv": {
+        "edgeType": "flow"
+      }
+    },
+    {
+      "id": "edge-MemoryAllocator-GC-1766516436454",
+      "fromNode": "MemoryAllocator",
+      "toNode": "GC",
+      "fromSide": "bottom",
+      "toSide": "right",
+      "pv": {
+        "edgeType": "control"
+      }
+    },
+    {
+      "id": "edge-VM-GC-1766516436454",
+      "fromNode": "VM",
+      "toNode": "GC",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "pv": {
+        "edgeType": "trigger"
+      }
+    },
+    {
+      "id": "edge-GC-MemoryAllocator-1766516436454",
+      "fromNode": "GC",
+      "toNode": "MemoryAllocator",
+      "fromSide": "top",
+      "toSide": "right",
+      "pv": {
+        "edgeType": "control"
+      }
+    }
+  ]
+}

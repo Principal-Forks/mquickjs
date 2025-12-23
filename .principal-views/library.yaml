@@ -1,0 +1,142 @@
+version: "1.0.0"
+name: "MQuickJS Component Library"
+
+nodeComponents:
+  CoreEngine:
+    description: "Main JavaScript engine core"
+    tags: ["engine", "core"]
+    shape: "rectangle"
+    color: "#4a90e2"
+  
+  REPL:
+    description: "Interactive JavaScript shell"
+    tags: ["interface", "cli"]
+    shape: "rounded"
+    color: "#7b68ee"
+  
+  API:
+    description: "Public C API interface"
+    tags: ["interface", "api"]
+    shape: "rounded"
+    color: "#ff7f50"
+  
+  Parser:
+    description: "JavaScript source parser"
+    tags: ["processor", "parsing"]
+    shape: "diamond"
+    color: "#32cd32"
+  
+  BytecodeGenerator:
+    description: "Bytecode generation and optimization"
+    tags: ["processor", "compilation"]
+    shape: "diamond"
+    color: "#ffd700"
+  
+  VM:
+    description: "Virtual machine executor"
+    tags: ["processor", "execution"]
+    shape: "diamond"
+    color: "#ff6347"
+  
+  GC:
+    description: "Tracing garbage collector"
+    tags: ["processor", "memory"]
+    shape: "diamond"
+    color: "#9370db"
+  
+  MemoryAllocator:
+    description: "Custom memory allocator"
+    tags: ["processor", "memory"]
+    shape: "diamond"
+    color: "#20b2aa"
+  
+  StdLib:
+    description: "JavaScript standard library"
+    tags: ["library", "builtin"]
+    shape: "cylinder"
+    color: "#4682b4"
+  
+  MathLib:
+    description: "Mathematical functions library"
+    tags: ["library", "math"]
+    shape: "cylinder"
+    color: "#cd5c5c"
+  
+  StringLib:
+    description: "String conversion utilities"
+    tags: ["library", "string"]
+    shape: "cylinder"
+    color: "#daa520"
+  
+  Utils:
+    description: "Common utility functions"
+    tags: ["library", "utility"]
+    shape: "cylinder"
+    color: "#708090"
+  
+  Readline:
+    description: "Command line input handling"
+    tags: ["interface", "input"]
+    shape: "rounded"
+    color: "#2e8b57"
+  
+  Example:
+    description: "C API usage example"
+    tags: ["interface", "demo"]
+    shape: "rounded"
+    color: "#8a2be2"
+  
+  BuildTool:
+    description: "Standard library build tool"
+    tags: ["tool", "build"]
+    shape: "hexagon"
+    color: "#ff4500"
+
+edgeComponents:
+  dependency:
+    description: "API calls into core engine"
+    style: "solid"
+    color: "#333333"
+    width: 2
+    directed: true
+    label: "calls"
+  
+  usage:
+    description: "Component usage relationship"
+    style: "dashed"
+    color: "#666666"
+    width: 1
+    directed: true
+    label: "uses"
+  
+  flow:
+    description: "Data/control flow"
+    style: "solid"
+    color: "#0066cc"
+    width: 2
+    directed: true
+    label: "flow"
+  
+  trigger:
+    description: "Event trigger relationship"
+    style: "dotted"
+    color: "#cc6600"
+    width: 1
+    directed: true
+    label: "triggers"
+  
+  control:
+    description: "Control relationship"
+    style: "double"
+    color: "#009900"
+    width: 2
+    directed: true
+    label: "controls"
+  
+  transformation:
+    description: "Data transformation"
+    style: "solid"
+    color: "#9900cc"
+    width: 2
+    directed: true
+    label: "compiles"
