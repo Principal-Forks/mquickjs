@@ -46,7 +46,12 @@ jobs:
 
       - name: Display results summary
         if: always()
-        run: quality-lens summary results.json
+        run: |
+          if [ -f results.json ] && [ -s results.json ]; then
+            quality-lens summary results.json || echo "Summary display failed, but results were captured"
+          else
+            echo "No results file found or empty"
+          fi
 
       - name: Upload results artifact
         if: always()
