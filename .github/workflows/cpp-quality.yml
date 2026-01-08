@@ -1,0 +1,153 @@
+name: C++ Code Quality Analysis
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cppcheck clang-tidy build-essential
+          
+      - name: Run cppcheck
+        run: |
+          cppcheck --enable=all --xml --xml-version=2 . 2> cppcheck-report.xml || true
+          
+      - name: Run clang-tidy
+        run: |
+          # Create compile_commands.json if it doesn't exist
+          if [ ! -f compile_commands.json ]; then
+            # Generate a simple compile commands file for the project
+            cat > compile_commands.json << EOF
+          [
+            {
+              "directory": "/github/workspace",
+              "command": "gcc -c -Wall -g -MMD -Werror -D_GNU_SOURCE -fno-math-errno -fno-trapping-math -Os mquickjs.c",
+              "file": "mquickjs.c"
+            },
+            {
+              "directory": "/github/workspace",
+              "command": "gcc -c -Wall -g -MMD -Werror -D_GNU_SOURCE -fno-math-errno -fno-trapping-math -Os mqjs.c",
+              "file": "mqjs.c"
+            },
+            {
+              "directory": "/github/workspace", 
+              "command": "gcc -c -Wall -g -MMD -Werror -D_GNU_SOURCE -fno-math-errno -fno-trapping-math -Os cutils.c",
+              "file": "cutils.c"
+            },
+            {
+              "directory": "/github/workspace",
+              "command": "gcc -c -Wall -g -MMD -Werror -D_GNU_SOURCE -fno-math-errno -fno-trapping-math -Os dtoa.c",
+              "file": "dtoa.c"
+            },
+            {
+              "directory": "/github/workspace",
+              "command": "gcc -c -Wall -g -MMD -Werror -D_GNU_SOURCE -fno-math-errno -fno-trapping-math -Os libm.c",
+              "file": "libm.c"
+            },
+            {
+              "directory": "/github/workspace",
+              "command": "gcc -c -Wall -g -MMD -Werror -D_GNU_SOURCE -fno-math-errno -fno-trapping-math -Os mqjs_stdlib.c",
+              "file": "mqjs_stdlib.c"
+            },
+            {
+              "directory": "/github/workspace",
+              "command": "gcc -c -Wall -g -MMD -Werror -D_GNU_SOURCE -fno-math-errno -fno-trapping-math -Os example_stdlib.c",
+              "file": "example_stdlib.c"
+            }
+          ]
+          EOF
+          fi
+          
+          # Run clang-tidy on all C files
+          find . -name "*.c" -not -path "./tests/*" -exec clang-tidy --checks='-*,readability-*,performance-*,modernize-*,bugprone-*,cert-*,-modernize-use-trailing-return-type' {} \; > clang-tidy-report.txt 2>&1 || true
+          
+      - name: Build project for additional analysis
+        run: |
+          make clean || true
+          make all 2>&1 | tee build-log.txt || true
+          
+      - name: Analyze with CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+          
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+        
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        
+      - name: Process cppcheck results
+        run: |
+          echo "## Cppcheck Results" > quality-report.md
+          if [ -f cppcheck-report.xml ] && [ -s cppcheck-report.xml ]; then
+            echo "### Issues Found:" >> quality-report.md
+            grep -o '<error[^>]*message="[^"]*"[^>]*' cppcheck-report.xml | head -20 | while read line; do
+              message=$(echo "$line" | sed -n 's/.*message="\([^"]*\)".*/\1/p')
+              file=$(echo "$line" | sed -n 's/.*file="\([^"]*\)".*/\1/p')
+              line=$(echo "$line" | sed -n 's/.*line="\([^"]*\)".*/\1/p')
+              severity=$(echo "$line" | sed -n 's/.*severity="\([^"]*\)".*/\1/p')
+              echo "- **$severity**: $message ($file:$line)" >> quality-report.md
+            done
+          else
+            echo "No issues found by cppcheck" >> quality-report.md
+          fi
+          
+      - name: Add clang-tidy results to report
+        run: |
+          echo "" >> quality-report.md
+          echo "## Clang-Tidy Results" >> quality-report.md
+          if [ -f clang-tidy-report.txt ] && [ -s clang-tidy-report.txt ]; then
+            echo "### Suggestions Found:" >> quality-report.md
+            grep -E "warning:|error:" clang-tidy-report.txt | head -10 | sed 's/.*\[/* /' | sed 's/\]$/:/' >> quality-report.md
+          else
+            echo "No issues found by clang-tidy" >> quality-report.md
+          fi
+          
+      - name: Add build status to report
+        run: |
+          echo "" >> quality-report.md
+          echo "## Build Status" >> quality-report.md
+          if grep -q "error:" build-log.txt 2>/dev/null; then
+            echo "❌ Build failed with errors" >> quality-report.md
+            grep "error:" build-log.txt | head -5 >> quality-report.md
+          else
+            echo "✅ Build completed successfully" >> quality-report.md
+          fi
+          
+      - name: Upload quality report
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-quality-report
+          path: |
+            quality-report.md
+            cppcheck-report.xml
+            clang-tidy-report.txt
+            build-log.txt
+          retention-days: 30
+          
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('quality-report.md', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
