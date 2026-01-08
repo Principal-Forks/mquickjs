@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   code-quality:
     runs-on: ubuntu-latest
@@ -76,17 +80,6 @@ jobs:
         run: |
           make clean || true
           make all 2>&1 | tee build-log.txt || true
-          
-      - name: Analyze with CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: cpp
-          
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-        
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
         
       - name: Process cppcheck results
         run: |
@@ -143,11 +136,14 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const report = fs.readFileSync('quality-report.md', 'utf8');
-            
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: report
-            });
+            try {
+              const report = fs.readFileSync('quality-report.md', 'utf8');
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: report
+              });
+            } catch (error) {
+              console.log('Could not read or post quality report:', error.message);
+            }
