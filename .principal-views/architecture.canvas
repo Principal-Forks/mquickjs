@@ -1,12 +1,7 @@
 {
   "pv": {
     "name": "MQuickJS Architecture",
-    "version": "1.0.0",
-    "layout": {
-      "locked": true,
-      "autoLayout": false,
-      "preservePositions": true
-    }
+    "version": "1.0.0"
   },
   "nodes": [
     {
@@ -188,9 +183,7 @@
       "text": "**Example**",
       "pv": {
         "nodeType": "Example",
-        "shape": "custom",
-        "locked": true,
-        "fixedPosition": true
+        "shape": "custom"
       }
     },
     {
