@@ -1,0 +1,22 @@
+metadata:
+  name: "MQuickJS Source Patterns"
+  version: "1.0.0"
+
+nodeTypes:
+  - description: "JavaScript engine core implementation"
+    shape: "rectangle"
+    sources: ["mquickjs.c", "mquickjs*.h", "cutils.c", "cutils.h", "dtoa.c", "dtoa.h"]
+  
+  - description: "Public API interface"
+    shape: "custom" 
+    sources: ["mquickjs.h", "example.c", "example_stdlib.c"]
+
+edgeTypes:
+  - style: "solid"
+    color: "#333333"
+    width: 2
+    directed: true
+
+allowedConnections:
+  - from: 1  # API
+    to: 0  # Core Engine
