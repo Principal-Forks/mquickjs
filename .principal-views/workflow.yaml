@@ -10,6 +10,58 @@ nodeTypes:
   - description: "Public API interface"
     shape: "custom" 
     sources: ["mquickjs.h", "example.c", "example_stdlib.c"]
+    
+  - description: "Interactive JavaScript shell"
+    shape: "custom"
+    sources: ["mqjs.c", "mqjs_stdlib.c", "readline.c", "readline_tty.c"]
+    
+  - description: "JavaScript source parser"
+    shape: "diamond"
+    sources: ["mquickjs.c"]
+    
+  - description: "Bytecode generation and optimization"
+    shape: "diamond"
+    sources: ["mquickjs.c"]
+    
+  - description: "Virtual machine executor"
+    shape: "diamond"
+    sources: ["mquickjs.c"]
+    
+  - description: "Tracing garbage collector"
+    shape: "diamond"
+    sources: ["mquickjs.c"]
+    
+  - description: "Custom memory allocator"
+    shape: "diamond"
+    sources: ["cutils.c"]
+    
+  - description: "JavaScript standard library"
+    shape: "custom"
+    sources: ["mqjs_stdlib.c"]
+    
+  - description: "Mathematical functions library"
+    shape: "custom"
+    sources: ["libm.c"]
+    
+  - description: "String conversion utilities"
+    shape: "custom"
+    sources: ["dtoa.c"]
+    
+  - description: "Common utility functions"
+    shape: "custom"
+    sources: ["cutils.c"]
+    
+  - description: "Command line input handling"
+    shape: "custom"
+    sources: ["readline.c", "readline_tty.c"]
+    
+  - description: "C API usage example"
+    shape: "custom"
+    sources: ["example.c", "example_stdlib.c"]
+    
+  - description: "Standard library build tool"
+    shape: "hexagon"
+    sources: ["mqjs_stdlib.c", "example_stdlib.c"]
 
 edgeTypes:
   - style: "solid"
@@ -17,6 +69,3 @@ edgeTypes:
     width: 2
     directed: true
 
-allowedConnections:
-  - from: 1  # API
-    to: 0  # Core Engine
